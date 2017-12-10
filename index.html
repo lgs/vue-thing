@@ -70,7 +70,7 @@
     var app = new Vue({
       el: '#app',
       data: {
-        query: '',
+        query: 'pokemon', // setting the default
         tweets: []
       },
       methods: {
@@ -81,6 +81,9 @@
               this.tweets = response.data.tweets
             })
         } 
+      },
+      created: function() {
+        this.searchTwitter();
       }
     });
   </script>
