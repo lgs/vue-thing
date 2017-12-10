@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Learning Vue Like a Boss!</title>
+
+  <!-- css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.5.3/css/bulma.css">
+  <style>
+    input {
+      margin-bottom: 30px;
+    }
+  </style>
+
+  <!-- js -->
+  <script src="https://unpkg.com/vue"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+  <!-- our template -->
+  <section id="app" class="hero is-light is-bold is-fullheight">
+  <div class="hero-body">
+  <div class="container">
+
+    <!-- input to search tweets -->
+    <input type="text" class="input" v-model="query" @keyup="searchTwitter">
+
+    <!-- loop over the tweets -->
+    <div class="columns is-multiline tweets-container">
+    <div class="column is-one-quarter" v-for="tweet in tweets">
+
+      <div class="card">
+        <!-- tweet image if exists -->
+        <div class="card-image" v-if="tweet.entities.media">
+          <figure class="image is-4by3">
+            <img :src="tweet.entities.media[0].media_url">
+          </figure>
+        </div>
+        <div class="card-content">
+
+          <!-- author -->
+          <div class="media" v-if="tweet.user">
+            <div class="media-left">
+              <figure class="image is-48x48">
+                <img :src="tweet.user.profile_image_url">
+              </figure>
+            </div>
+            <div class="media-content">
+              <p class="title is-4">{{ tweet.user.name }}</p>
+              <p class="subtitle is-6">@{{ tweet.user.screen_name }}</p>
+            </div>
+          </div>
+
+          <!-- tweet text -->
+          <div class="content">
+            {{ tweet.text }}
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    </div>
+    
+  </div>
+  </div>
+  </section> 
+
+  <!-- our javascript -->
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        query: '',
+        tweets: []
+      },
+      methods: {
+        // hit the twitter api for tweets
+        searchTwitter: function() {
+          axios.get(`https://wt-8a8bf3a2c952984defbd6bb48304b38e-0.run.webtask.io/vue-twitter-search?q=${this.query}`)
+            .then((response) => {
+              this.tweets = response.data.tweets
+            })
+        } 
+      }
+    });
+  </script>
+</body>
+</html>
